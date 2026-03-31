@@ -6,7 +6,7 @@ public class Book {
     private String author;
     private boolean isAvailable;
 
-    public void addBook(String id, String title, String author){
+    public Book(String id, String title, String author){
         this.id = id;
         this.title = title;
         this.author = author;
@@ -31,5 +31,9 @@ public class Book {
 
     public void letBeBorrowed(){
         this.isAvailable = false;
+    }
+
+    public String toString(){
+        return "ID: " + this.id + " Book Title: "+ this.title + " Author Name: " + this.author + " Borrowed: " + !this.isAvailable;
     }
 }
