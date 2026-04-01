@@ -6,44 +6,43 @@ import java.util.Scanner;
 public class UserInterface {
     Scanner scanner;
     LibraryService service;
+    User currentUser;
 
     public UserInterface(Scanner scanner){
         this.service = new LibraryService();
         this.scanner = scanner;
     }
 
-    public void start(){
+    public void start() {
 
-        while(true){
+        while (true) {
 
-            System.out.println("Welcome to our Library. Please enter your name to login.");
+            System.out.println("Welcome to our Library. Please enter your name to login. Press c to quit.");
             System.out.println("Enter Name: ");
             String input = getInput();
 
 
-            if(input.equals("c")){
+            if (input.equals("c")) {
                 return;
             }
 
-            if(checkForUser(input)){
+            if (checkForUser(input)) {
                 startLibrary();
-            }else{
-                System.out.println("User Not detected");
-                System.out.println("Would you like to enroll? Y/N");
-                String userEnrollWant = scanner.nextLine();
-                if(userEnrollWant.equals("Y")){
-                    service.addUser(input);
-                }else{
-                    return;
-                }
             }
+            System.out.println("User Not detected");
+            System.out.println("Would you like to enroll? Y/N");
+            String userEnrollWant = scanner.nextLine();
+            if (userEnrollWant.equals("Y")) {
+                currentUser = service.addUser(input);
+            }
+
 
         }
 
     }
 
 
-    public void startLibrary(){
+    public void startLibrary() {
         while(true){
             printMenu();
             int input = getMenuOption();
@@ -73,18 +72,23 @@ public class UserInterface {
                     break;
 
                 case 4:
+                    if (currentUser.getBorrowedList().size() >= 3) {
+                        System.out.println("You've crossed limit for borrowing. Please return a book first.");
+                        break;
+                    }
+
                     System.out.println("Enter ID of the book you want.");
                     String searchingId = scanner.nextLine();
-                    service.borrowBook(searchingId);
+                    service.borrowBook(searchingId, currentUser);
                     break;
 
                 case 5:
                     System.out.println("Please enter the ID of the book you're returning.");
                     String returningId = scanner.nextLine();
-                    service.returnBook(returningId);
+                    service.returnBook(returningId, currentUser);
                     break;
 
-                case 6:
+                case 7:
                     System.out.println("Thanks for visiting us");;
                     return;
             }
@@ -99,7 +103,8 @@ public class UserInterface {
                 3. Search Book
                 4. Borrow Book
                 5. Return Book
-                6. Exit
+                6. See my list
+                7. Exit
                 """);
     }
 
@@ -108,7 +113,7 @@ public class UserInterface {
         while(true){
             try{
                 input = Integer.parseInt(scanner.nextLine());
-                if(input > 0 && input <=6){
+                if(input > 0 && input <=7){
                     return input;
                 }
                 System.out.println("Enter valid option, please.6");

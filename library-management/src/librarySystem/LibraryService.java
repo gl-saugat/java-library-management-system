@@ -21,23 +21,26 @@ public class LibraryService {
                 .findFirst();
     }
 
-    public void borrowBook(String id){
+    public void borrowBook(String id, User user){
         if(bookCollection.get(id).isItAvailable()){
             bookCollection.get(id).letBeBorrowed();
+            user.addToMyList(bookCollection.get(id));
             System.out.println("Added to your list!");
         }else{
             System.out.println("Sorry book isn't available.");
         }
     }
 
-    public void returnBook(String id){
+    public void returnBook(String id, User user){
         bookCollection.get(id).letItReturned();
+        user.getBorrowedList().remove(id);
 
     }
 
-    public void addUser(String name){
+    public User addUser(String name){
         User newUser = new User(name);
         users.add(newUser);
+        return newUser;
     }
 
 }
