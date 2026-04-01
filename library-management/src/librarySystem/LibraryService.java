@@ -20,6 +20,17 @@ public class LibraryService {
                 .findFirst();
     }
 
+    public void borrowBook(String id){
+        if(bookCollection.get(id).isItAvailable()){
+            bookCollection.get(id).letBeBorrowed();
+        }else{
+            System.out.println("Sorry book isn't available.");
+        }
+    }
 
+    public void returnBook(String id){
+        bookCollection.get(id).letItReturned();
+
+    }
 
 }

@@ -33,6 +33,12 @@ public class Book {
         this.isAvailable = false;
     }
 
+    public void letItReturned(){
+        this.isAvailable = true;
+    }
+
+
+
     public String toString(){
         return "ID: " + this.id + " Book Title: "+ this.title + " Author Name: " + this.author + " Borrowed: " + !this.isAvailable;
     }
