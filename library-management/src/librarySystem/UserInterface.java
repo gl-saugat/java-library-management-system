@@ -15,17 +15,47 @@ public class UserInterface {
     public void start(){
 
         while(true){
+
+            System.out.println("Welcome to our Library. Please enter your name to login.");
+            System.out.println("Enter Name: ");
+            String input = getInput();
+
+
+            if(input.equals("c")){
+                return;
+            }
+
+            if(checkForUser(input)){
+                startLibrary();
+            }else{
+                System.out.println("User Not detected");
+                System.out.println("Would you like to enroll? Y/N");
+                String userEnrollWant = scanner.nextLine();
+                if(userEnrollWant.equals("Y")){
+                    service.addUser(input);
+                }else{
+                    return;
+                }
+            }
+
+        }
+
+    }
+
+
+    public void startLibrary(){
+        while(true){
             printMenu();
             int input = getMenuOption();
 
             switch (input){
                 case 1:
                     System.out.println("Enter ID");
-                    String id = scanner.nextLine();
+                    String id = getInput();
                     System.out.println("Enter Book name");
-                    String name = scanner.nextLine();
+                    String name = getInput();
                     System.out.println("Enter author name");
-                    String authorName = scanner.nextLine();
+                    String authorName = getInput();;
                     service.addBook(id, name, authorName);
                     break;
 
@@ -60,7 +90,6 @@ public class UserInterface {
             }
 
         }
-
     }
 
     public void printMenu(){
@@ -87,6 +116,29 @@ public class UserInterface {
                 System.out.println("Error is: " + e.getMessage());
             }
         }
+    }
+
+    public String getInput(){
+        String input = "";
+        while(true){
+            try{
+                input = scanner.nextLine();
+                if(input.isEmpty()){
+                    System.out.println("Can't leave Empty!!");
+                }else{
+                    return input;
+                }
+
+            }catch (Exception e){
+                System.out.println("Error is: " + e.getMessage());
+            }
+        }
+    }
+
+    public boolean checkForUser(String input){
+        return service.users.stream()
+                .map(User::getName)
+                .anyMatch(name -> name.equalsIgnoreCase(input));
     }
 
 }
