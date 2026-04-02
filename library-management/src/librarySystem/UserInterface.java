@@ -1,12 +1,15 @@
 package librarySystem;
 
+import org.w3c.dom.ls.LSOutput;
+
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 public class UserInterface {
-    Scanner scanner;
-    LibraryService service;
-    User currentUser;
+    private Scanner scanner;
+    private LibraryService service;
+    private User currentUser;
 
     public UserInterface(Scanner scanner){
         this.service = new LibraryService();
@@ -68,9 +71,12 @@ public class UserInterface {
                 case 3:
                     System.out.println("Any book you're looking for, enter it's name");
                     String book = scanner.nextLine();
-                    service.searchBook(book).ifPresentOrElse(
-                            System.out::println,
-                            () -> System.out.println("Sorry, the book isn't available."));
+                    List<Book> bookResults = service.searchBook(book);
+                    if(!(bookResults.isEmpty())){
+                        bookResults.forEach(System.out::println);
+                        break;
+                    }
+                    System.out.println("Sorry, the book isn't available.");
                     break;
 
                 case 4:
@@ -80,13 +86,18 @@ public class UserInterface {
 
                     System.out.println("Enter ID of the book you want.");
                     String searchingId = scanner.nextLine();
-                    service.borrowBook(searchingId, currentUser);
+                    String s = service.borrowBook(searchingId, currentUser) ? "Added to your list" : "Sorry, book isn't available at the moment.";
+                    System.out.println(s);
                     break;
 
                 case 5:
                     System.out.println("Please enter the ID of the book you're returning.");
                     String returningId = scanner.nextLine();
-                    service.returnBook(returningId, currentUser);
+                    if(service.isBookWithUser(returningId, currentUser)){
+                        service.returnBook(returningId, currentUser);
+                        break;
+                    }
+                    System.out.println("You don't have this book from us.");
                     break;
 
                 case 6:
@@ -146,7 +157,7 @@ public class UserInterface {
     }
 
     public boolean checkForUser(String input){
-        return service.users.stream()
+        return service.userList().stream()
                 .map(User::getName)
                 .anyMatch(name -> name.equalsIgnoreCase(input));
     }

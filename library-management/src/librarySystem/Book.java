@@ -1,5 +1,7 @@
 package librarySystem;
 
+import java.util.Objects;
+
 public class Book {
     private String id;
     private String title;
@@ -38,8 +40,27 @@ public class Book {
     }
 
 
-
+    @Override
     public String toString(){
         return "ID: " + this.id + " Book Title: "+ this.title + " Author Name: " + this.author + " Borrowed: " + !this.isAvailable;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(this==obj){
+            return true;
+        }
+
+        if(obj == null || getClass() != obj.getClass()) return false;
+
+        Book otherBook = (Book) obj;
+        return Objects.equals(id, otherBook.id) &&
+                Objects.equals(title, otherBook.title) &&
+                Objects.equals(author, otherBook.author);
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(id,title,author);
     }
 }
