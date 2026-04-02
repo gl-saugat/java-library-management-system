@@ -12,6 +12,9 @@ public class LibraryService {
     }
 
     public Map<String, Book> listBooks(){
+        if(bookCollection.isEmpty()){
+            System.out.println("No books available at the moment.");
+        }
         return bookCollection;
     }
 
@@ -32,9 +35,24 @@ public class LibraryService {
     }
 
     public void returnBook(String id, User user){
-        bookCollection.get(id).letItReturned();
-        user.getBorrowedList().remove(id);
+        Book book;
+        if(bookCollection.containsKey(id)){
+            book = bookCollection.get(id);
+            bookCollection.get(id).letItReturned();
+            user.getBorrowedList().remove(book);
+            return;
+        }
+        System.out.println("Sorry, that book isn't ours, if you want to, please add it to our list. Thank you!!");
 
+
+    }
+
+    public List<Book> getBorrowedList(User user){
+        List<Book> list = user.getBorrowedList();
+        if(list.isEmpty()){
+            System.out.println("You haven't borrowed anthing yet.");
+        }
+        return list;
     }
 
     public User addUser(String name){

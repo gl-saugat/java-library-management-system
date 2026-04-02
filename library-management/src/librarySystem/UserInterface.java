@@ -88,6 +88,9 @@ public class UserInterface {
                     service.returnBook(returningId, currentUser);
                     break;
 
+                case 6:
+                    service.getBorrowedList(currentUser);
+
                 case 7:
                     System.out.println("Thanks for visiting us");;
                     return;
