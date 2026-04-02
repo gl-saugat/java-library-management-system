@@ -28,13 +28,15 @@ public class UserInterface {
 
             if (checkForUser(input)) {
                 startLibrary();
+            }else{
+                System.out.println("User Not detected");
+                System.out.println("Would you like to enroll? Y/N");
+                String userEnrollWant = scanner.nextLine();
+                if (userEnrollWant.equals("Y")) {
+                    currentUser = service.addUser(input);
+                }
             }
-            System.out.println("User Not detected");
-            System.out.println("Would you like to enroll? Y/N");
-            String userEnrollWant = scanner.nextLine();
-            if (userEnrollWant.equals("Y")) {
-                currentUser = service.addUser(input);
-            }
+
 
 
         }
@@ -72,8 +74,7 @@ public class UserInterface {
                     break;
 
                 case 4:
-                    if (currentUser.getBorrowedList().size() >= 3) {
-                        System.out.println("You've crossed limit for borrowing. Please return a book first.");
+                    if (service.hasUserCrossedLimit(currentUser)) {
                         break;
                     }
 
@@ -89,7 +90,8 @@ public class UserInterface {
                     break;
 
                 case 6:
-                    service.getBorrowedList(currentUser);
+                    service.getBorrowedList(currentUser).forEach(System.out::println);
+                    break;
 
                 case 7:
                     System.out.println("Thanks for visiting us");;
@@ -121,7 +123,7 @@ public class UserInterface {
                 }
                 System.out.println("Enter valid option, please.6");
             }catch (Exception e){
-                System.out.println("Error is: " + e.getMessage());
+                System.out.println("Invalid Input!!");
             }
         }
     }

@@ -20,14 +20,31 @@ public class LibraryService {
 
     public Optional<Book> searchBook(String text){
         return bookCollection.values().stream()
-                .filter(book -> book.getTitle().contains(text))
+                .filter(book -> book.getAuthor().contains(text) || book.getTitle().contains(text))
                 .findFirst();
     }
 
+    public boolean hasUserCrossedLimit(User user){
+        if(this.bookCollection.size() >= 3){
+            System.out.println("You've crossed limit for borrowing. Please return a book first.");
+            return true;
+        }
+        return false;
+    }
+
     public void borrowBook(String id, User user){
-        if(bookCollection.get(id).isItAvailable()){
-            bookCollection.get(id).letBeBorrowed();
-            user.addToMyList(bookCollection.get(id));
+
+        Map<String, Book> list = this.bookCollection;
+
+        if(list.isEmpty()){
+            System.out.println("We don't have any books at the moment to lend.");
+            return;
+        }
+
+
+        if(list.get(id).isItAvailable()){
+            list.get(id).letBeBorrowed();
+            user.addToMyList(list.get(id));
             System.out.println("Added to your list!");
         }else{
             System.out.println("Sorry book isn't available.");
@@ -50,7 +67,7 @@ public class LibraryService {
     public List<Book> getBorrowedList(User user){
         List<Book> list = user.getBorrowedList();
         if(list.isEmpty()){
-            System.out.println("You haven't borrowed anthing yet.");
+            System.out.println("You haven't borrowed anything yet.");
         }
         return list;
     }
